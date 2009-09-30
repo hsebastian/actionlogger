@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- ?xml-stylesheet href="chrome://actionlogger/chrome/actionlogger/skin/overlay.css" type="text/css"? -->
+<!-- DOCTYPE overlay SYSTEM "chrome://actionlogger/chrome/actionlogger/content/locale/overlay.dtd" -->
+
+<overlay id="actionlogger-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  
+  <!-- imports JavaScript -->
+  <script src="overlay.js"/>
+  
+  <!-- This is for the Tools menu -->  
+  <menupopup id="menu_ToolsPopup">
+    <menuitem id="actionlogger" label="Action" command="Alert(Hello!);"/>
+  </menupopup>
+</overlay> 

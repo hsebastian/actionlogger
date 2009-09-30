@@ -1,0 +1,4 @@
+
+content actionlogger chrome/actionlogger/content/
+
+overlay chrome://browser/content/browser.xul chrome://actionlogger/chrome/actionlogger/content/overlay.xul
