@@ -1,4 +1,6 @@
 
-content actionlogger chrome/actionlogger/content/
+content actionlogger content/
 
-overlay chrome://browser/content/browser.xul chrome://actionlogger/chrome/actionlogger/content/overlay.xul
+overlay chrome://browser/content/browser.xul chrome://actionlogger/content/overlay.xul
+
+locale	actionlogger	en-US	locale/en-US/

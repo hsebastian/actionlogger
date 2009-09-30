@@ -5,7 +5,7 @@ var ActionLogger = {
   },
 
   onMenuItemCommand: function() {
-    window.open("chrome://actionlogger/chrome/actionlogger/content/main-window.xul", "", "chrome");
+    window.open("chrome://actionlogger/content/main-window.xul", "", "chrome");
   }
 };
 

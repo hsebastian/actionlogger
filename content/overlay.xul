@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- ?xml-stylesheet href="chrome://actionlogger/chrome/actionlogger/skin/overlay.css" type="text/css"? -->
-<!-- DOCTYPE overlay SYSTEM "chrome://actionlogger/chrome/actionlogger/content/locale/overlay.dtd" -->
+<!DOCTYPE overlay SYSTEM "chrome://actionlogger/locale/overlay.dtd">
 
 <overlay id="actionlogger-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   
@@ -9,6 +9,7 @@
   
   <!-- This is for the Tools menu -->  
   <menupopup id="menu_ToolsPopup">
-    <menuitem id="actionlogger" label="Action" command="Alert(Hello!);"/>
+    <menuitem id="actionlogger" label="&actionloggerToolsMenu.label;" 
+              accesskey="&actionloggerToolsMenu.accesskey;" oncommand="ActionLogger.onMenuItemCommand(event);"/>
   </menupopup>
 </overlay> 

@@ -4,10 +4,29 @@
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
   <Description about="urn:mozilla:install-manifest">
+    
     <em:id>actionlogger@happyhans.happyhans</em:id>
-    <em:version>1.0</em:version>
-    <em:type>2</em:type><!-- 2 for extension -->
-   
+    <em:version>0.1</em:version>
+    
+    <!-- Front End MetaData -->
+    
+    <em:name>actionlogger</em:name>
+    <em:description>Logs all actions on Fennec</em:description>
+    <em:creator>happyhans</em:creator>
+    <em:homepageURL>http://www.example.com/</em:homepageURL>
+    
+    <!-- optional items -->
+    
+    <em:contributor>A person who helped you</em:contributor>
+    <em:contributor>Another one</em:contributor>
+    <em:homepageURL>http://kb.mozillazine.org/Getting_started_with_extension_development</em:homepageURL>
+    
+    <!--em:optionsURL>chrome://sampleext/content/settings.xul</em:optionsURL>
+    
+    <em:aboutURL>chrome://sampleext/content/about.xul</em:aboutURL>
+    <em:iconURL>chrome://sampleext/skin/mainicon.png</em:iconURL>
+    <em:updateURL>http://sampleextension.mozdev.org/update.rdf</em:updateURL-->
+    
     <!-- Firefox -->
     
     <em:targetApplication>
@@ -27,11 +46,6 @@
         <em:maxVersion>1.0.*</em:maxVersion>
       </Description>
     </em:targetApplication>
-    
-    <!-- Front End MetaData -->
-    <em:name>actionlogger</em:name>
-    <em:description>Log all actions on Fennec</em:description>
-    <em:creator>happyhans</em:creator>
-    <em:homepageURL>http://www.example.com/</em:homepageURL>
+
   </Description>      
 </RDF>
