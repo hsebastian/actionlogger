@@ -1,2 +1,3 @@
 <!ENTITY actionloggerToolsMenu.label "Action Logger!">
-<!ENTITY actionloggerToolsMenu.accesskey "a">
+<!ENTITY actionloggerToolsMenu.accesskey "A">
+<!ENTITY actionloggerTaskCmd.commandkey "a">
