@@ -1,4 +1,4 @@
-var ActionLogger = {
+var ActionLoggerOverlay = {
   onLoad: function() {
     // initialization code
     this.initialized = true;
@@ -9,4 +9,4 @@ var ActionLogger = {
   }
 };
 
-window.addEventListener("load", function(e) { ActionLogger.onLoad(e); }, false); 
+window.addEventListener("load", function(e) { ActionLoggerOverlay.onLoad(e); }, false); 

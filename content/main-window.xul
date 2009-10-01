@@ -5,6 +5,10 @@
         title="&title.label;">
 
     <!-- your code here -->
-    <button label="&clearButton.label;"/>
-    <textbox multiline="true" value="Action information"/>
+    
+    <!-- imports JavaScript -->
+    <script src="actionlogger.js"/>
+  
+    <button id="clearButton" label="&clearButton.label;"/>
+    <textbox id="outputBox" multiline="true" value="Action information"/>
 </window>
