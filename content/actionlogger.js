@@ -1,7 +1,8 @@
 var ActionLogger = {
   
-  _clearButton : null,
-  _outputBox : null,
+  clearButton : null,
+  outputBox : null,
+  mainWindow: null,
   
   onLoad: function() {
     this.init();
@@ -9,17 +10,52 @@ var ActionLogger = {
   },
   
   init: function() {
-    _clearButton = document.getElementById("clearButton");
-    _clearButton.addEventListener("click", this.onClick, false);
-    _outputBox = document.getElementById("outputBox");
-    _outputBox.value = "Opened!";
+    outputBox = OutputBox.element;
+    outputBox.value = "Opened!";
+    
+    clearButton = ClearButton.element;
+    clearButton.addEventListener("click", function(e) { ClearButton.onClick(outputBox); }, false);
+    
+    mainWindow = MainWindow.element
+    mainWindow.addEventListener("click", function(e) { ActionLogger.log(e); }, false);
   },
   
-  onClick: function() {
+  log: function(e) {
     var date = new Date();
-    _outputBox.value = date.toLocaleString();
+    outputBox.value = date.toLocaleString() + " " + e.target.id.toString() + " " + e.type.toString();
   },
   
+};
+
+var ClearButton = {
+  get element() {
+    return document.getElementById("clearButton");
+  },
+  
+  onClick: function(x) {
+    var date = new Date();
+    x.value = "";
+  },
+};
+
+var OutputBox = {
+  get element() {
+    return document.getElementById("outputBox");
+  },
+};
+
+var MainWindow = {
+  get element() {
+    var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                       .getService(Components.interfaces.nsIWindowMediator);
+    //var win = wm.getMostRecentWindow("navigator:browser");
+    var enumerator = wm.getEnumerator("navigator:browser");
+    while(enumerator.hasMoreElements()) {  
+      var win = enumerator.getNext();
+      var mainwindow = win.document.getElementById("main-window");
+    }
+    return mainwindow;
+  },
 };
 
 // alert("clicked");
