@@ -37,7 +37,7 @@ var ActionLogger = {
     while(elements.length != 0) {
       outputBox.value = outputBox.value + " " + elements.shift();
     }
-  },  
+  },
 };
 
 var ClearButton = {
@@ -45,15 +45,22 @@ var ClearButton = {
     return document.getElementById("clearButton");
   },
   
-  onClick: function(x) {
-    var date = new Date();
-    x.value = "";
+  onClick: function(outputbox) {
+    // clear all row entries in the outputbox 
+    outputbox.value = "";
   },
 };
 
 var OutputBox = {
+  entries: null,
   get element() {
     return document.getElementById("outputBox");
+  },
+  clear: function() {
+    // entries.clear();
+  },
+  insert: function(evin) {
+    // 
   },
 };
 
@@ -66,12 +73,88 @@ var MainWindow = {
     var enumerator = wm.getEnumerator("navigator:browser");
     while(enumerator.hasMoreElements()) {  
       var win = enumerator.getNext();
-      //var mainwindow = win.document.getElementById(this.id);
     }
     return win;
   },  
-
+  
 };
 
+/*function Entry(event){
+
+    // properties
+    this.target = event.target.id;
+    this.target = event.target.nodeName;
+    this.action = event.type;
+    //this.timestamp = time.now();
+    
+    // methods
+    if (typeof this.sayName != "function"){
+      
+      Person.prototype.sayName = function(){
+          alert(this.name);
+      };
+    }
+    
+}
+        <treeitem container="true" open="true">        
+            <treerow>        
+                <treecell label="TARGET" properties="{any-props-for-css}"/>
+                <treecell label="ACTION" properties="{any-props-for-css}"/>       
+            </treerow>
+            <treechildren>        
+                <treeitem container="true" open="true">        
+                    <treerow>        
+                        <treecell label="TARGET'S PARENT" properties="{any-props-for-css}"/>        
+                    </treerow>
+                    <treechildren>        
+                        <treeitem container="true" open="true">       
+                            <treerow>       
+                                <treecell label="TARGET'S GRANDPARENT" properties="{any-props-for-css}"/>       
+                            </treerow>       
+                        </treeitem>       
+                    </treechildren>         
+                </treeitem>        
+            </treechildren>              
+        </treeitem>
+*/
+
+/*function EventInfo(event){
+
+    // properties
+    this.target = event.target.id;
+    this.target = event.target.nodeName;
+    this.action = event.type;
+    //this.timestamp = time.now();
+    
+    // methods
+    if (typeof this.sayName != "function"){
+      
+      Person.prototype.sayName = function(){
+          alert(this.name);
+      };
+    }
+    
+}
+*/
+
+/*var ListenerButton = {
+  
+  state: true,
+  
+  get element() {
+    return document.getElementById("listenerButton");
+  },
+  
+  toggle: function() {
+    if(this.state) { 
+      state = false;
+    } else {
+      state = true;
+    }
+  },
+};
 // alert("clicked");
+*/
+
+
 window.addEventListener("load", function(e) { ActionLogger.onLoad(e); }, false); 

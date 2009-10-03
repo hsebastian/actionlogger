@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+ 
+    <!-- your code here -->
+<tree id="olAttr" flex="1">
+    <treecols>
+          <!-- These labels don't need to be localized since they are defined
+                 by DOM APIs -->
+          <treecol id="colNodeName"
+                   label="nodeName"
+                   persist="width,hidden,ordinal" primary="true"
+                   flex="1"/>
+          <splitter class="tree-splitter"/>
+          <treecol id="colLocalName"
+                   label="localName"
+                   persist="width,hidden,ordinal"
+                   flex="1"/>
+          <splitter class="tree-splitter"/>
+          <treecol id="colPrefix"
+                   hidden="true"
+                   label="prefix"
+                   persist="width,hidden,ordinal"
+                   flex="1"/>
+          <splitter class="tree-splitter"/>
+          <treecol id="colNamespaceURI"
+                   hidden="true"
+                   label="namespaceURI"
+                   persist="width,hidden,ordinal"
+                   flex="1"/>
+          <splitter class="tree-splitter"/>
+          <treecol id="colNodeValue"
+                   label="nodeValue"
+                   persist="width,hidden,ordinal"
+                   flex="1"/>
+    </treecols>
+    <treechildren>         
+        <treeitem container="true" open="true">         
+            <treerow>         
+                <treecell label="0, 0" properties="{any-props-for-css}"/>
+                <treecell label="0, 1" properties="{any-props-for-css}"/>        
+            </treerow>
+            <treechildren>         
+                <treeitem container="true" open="true">         
+                    <treerow>         
+                        <treecell label="subitem label" properties="{any-props-for-css}"/>         
+                    </treerow>
+                    <treechildren>         
+                        <treeitem container="true" open="true">        
+                            <treerow>        
+                                <treecell label="subitem label" properties="{any-props-for-css}"/>        
+                            </treerow>        
+                        </treeitem>        
+                    </treechildren>          
+                </treeitem>         
+            </treechildren>               
+        </treeitem>
+        <treeitem container="true" open="true">         
+            <treerow>        
+                <treecell label="1, 0" properties="{any-props-for-css}"/>
+                <treecell label="1, 1" properties="{any-props-for-css}"/>        
+            </treerow>
+            <treechildren>        
+                <treeitem container="true" open="true">        
+                    <treerow>        
+                        <treecell label="subitem label" properties="{any-props-for-css}"/>        
+                    </treerow>
+                    <treechildren>        
+                        <treeitem container="true" open="true">       
+                            <treerow>       
+                                <treecell label="subitem label" properties="{any-props-for-css}"/>       
+                            </treerow>       
+                        </treeitem>       
+                    </treechildren>         
+                </treeitem>        
+            </treechildren>
+        </treeitem>          
+    </treechildren>
+</tree>
+</window>
