@@ -16,15 +16,28 @@ var ActionLogger = {
     clearButton = ClearButton.element;
     clearButton.addEventListener("click", function(e) { ClearButton.onClick(outputBox); }, false);
     
-    mainWindow = MainWindow.element
+    mainWindow = MainWindow.window
     mainWindow.addEventListener("click", function(e) { ActionLogger.log(e); }, false);
   },
   
   log: function(e) {
     var date = new Date();
-    outputBox.value = date.toLocaleString() + " " + e.target.id.toString() + " " + e.type.toString();
-  },
-  
+    var id = e.target.id.toString()
+    
+    outputBox.value = date.toLocaleString() + " " + id + " " + e.type.toString();
+    
+    var elements = new Array();
+    target = mainWindow.document.getElementById(id); 
+    
+    while(target.parentNode.id != MainWindow.rootElementId) {
+      target = target.parentNode;
+      elements.push(target.id);
+    }
+    
+    while(elements.length != 0) {
+      outputBox.value = outputBox.value + " " + elements.shift();
+    }
+  },  
 };
 
 var ClearButton = {
@@ -45,17 +58,19 @@ var OutputBox = {
 };
 
 var MainWindow = {
-  get element() {
+  rootElementId: "main-window",
+  get window() {
     var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                        .getService(Components.interfaces.nsIWindowMediator);
     //var win = wm.getMostRecentWindow("navigator:browser");
     var enumerator = wm.getEnumerator("navigator:browser");
     while(enumerator.hasMoreElements()) {  
       var win = enumerator.getNext();
-      var mainwindow = win.document.getElementById("main-window");
+      //var mainwindow = win.document.getElementById(this.id);
     }
-    return mainwindow;
-  },
+    return win;
+  },  
+
 };
 
 // alert("clicked");
