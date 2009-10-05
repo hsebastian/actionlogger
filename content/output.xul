@@ -8,73 +8,77 @@
           <!-- These labels don't need to be localized since they are defined
                  by DOM APIs -->
           <treecol id="colNodeName"
-                   label="nodeName"
+                   label="Elements"
                    persist="width,hidden,ordinal" primary="true"
                    flex="1"/>
           <splitter class="tree-splitter"/>
           <treecol id="colLocalName"
-                   label="localName"
-                   persist="width,hidden,ordinal"
-                   flex="1"/>
-          <splitter class="tree-splitter"/>
-          <treecol id="colPrefix"
-                   hidden="true"
-                   label="prefix"
-                   persist="width,hidden,ordinal"
-                   flex="1"/>
-          <splitter class="tree-splitter"/>
-          <treecol id="colNamespaceURI"
-                   hidden="true"
-                   label="namespaceURI"
-                   persist="width,hidden,ordinal"
-                   flex="1"/>
-          <splitter class="tree-splitter"/>
-          <treecol id="colNodeValue"
-                   label="nodeValue"
+                   label="Event"
                    persist="width,hidden,ordinal"
                    flex="1"/>
     </treecols>
-    <treechildren>         
-        <treeitem container="true" open="true">         
+    <treechildren>          
+        <treeitem container="true" open="true">          
+            <treerow>          
+                <treecell label="urlbar-edit" properties="{any-props-for-css}"/>
+                <treecell label="Click" properties="{any-props-for-css}"/>         
+            </treerow>
+            <treechildren>          
+                <treeitem container="true" open="true">          
+                    <treerow>          
+                        <treecell label="urlbar-editarea" properties="{any-props-for-css}"/>          
+                    </treerow>
+                    <treechildren>          
+                        <treeitem container="true" open="true">         
+                            <treerow>         
+                                <treecell label="urlbar-container" properties="{any-props-for-css}"/>         
+                            </treerow>
+                    <treechildren>         
+                        <treeitem container="true" open="true">        
+                            <treerow>        
+                                <treecell label="toolbar-main" properties="{any-props-for-css}"/>        
+                            </treerow>
+                    <treechildren>         
+                        <treeitem container="true" open="true">        
+                            <treerow>        
+                                <treecell label="toolbar-container" properties="{any-props-for-css}"/>        
+                            </treerow>        
+                        </treeitem>        
+                    </treechildren>        
+                        </treeitem>        
+                    </treechildren>        
+                        </treeitem>         
+                    </treechildren>           
+                </treeitem>          
+            </treechildren>                
+        </treeitem>
+        <treeitem container="true" open="true">          
             <treerow>         
-                <treecell label="0, 0" properties="{any-props-for-css}"/>
-                <treecell label="0, 1" properties="{any-props-for-css}"/>        
+                <treecell label="tool-panel-open" properties="{any-props-for-css}"/>
+                <treecell label="Click" properties="{any-props-for-css}"/>         
             </treerow>
             <treechildren>         
                 <treeitem container="true" open="true">         
                     <treerow>         
-                        <treecell label="subitem label" properties="{any-props-for-css}"/>         
+                        <treecell label="click browser-controls" properties="{any-props-for-css}"/>         
                     </treerow>
                     <treechildren>         
                         <treeitem container="true" open="true">        
                             <treerow>        
-                                <treecell label="subitem label" properties="{any-props-for-css}"/>        
-                            </treerow>        
-                        </treeitem>        
-                    </treechildren>          
-                </treeitem>         
-            </treechildren>               
-        </treeitem>
-        <treeitem container="true" open="true">         
-            <treerow>        
-                <treecell label="1, 0" properties="{any-props-for-css}"/>
-                <treecell label="1, 1" properties="{any-props-for-css}"/>        
-            </treerow>
-            <treechildren>        
-                <treeitem container="true" open="true">        
-                    <treerow>        
-                        <treecell label="subitem label" properties="{any-props-for-css}"/>        
-                    </treerow>
+                                <treecell label="scrollbox" properties="{any-props-for-css}"/>        
+                            </treerow>
                     <treechildren>        
                         <treeitem container="true" open="true">       
                             <treerow>       
-                                <treecell label="subitem label" properties="{any-props-for-css}"/>       
+                                <treecell label="stack" properties="{any-props-for-css}"/>       
                             </treerow>       
                         </treeitem>       
-                    </treechildren>         
-                </treeitem>        
+                    </treechildren>        
+                        </treeitem>        
+                    </treechildren>          
+                </treeitem>         
             </treechildren>
-        </treeitem>          
+        </treeitem>           
     </treechildren>
 </tree>
 </window>
