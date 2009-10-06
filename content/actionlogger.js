@@ -1,3 +1,5 @@
+const XULNS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+
 var ActionLogger = {
   
   clearButton : null,
@@ -25,14 +27,13 @@ var ActionLogger = {
 };
 
 var ClearButton = {
+  
   target: null,
+  
   get element() {
     return document.getElementById("clearButton");
   },
-  onClick: function(target) {
-    alert(target.element.id);
-    target.clear();
-  },
+  
   connect: function(target) {
     this.target = target;
     this.element.addEventListener("click", function(e) { target.clear(); }, false);
@@ -40,56 +41,95 @@ var ClearButton = {
 };
 
 var OutputBox = {
-  window: null,
+  
   get element() {
     return document.getElementById("outputBox");
   },
+  
   clear: function() {
     this.element.value = "";
   },
-  log: function(e) {
+  
+  log: function(eventinfo) {
     var date = new Date();
-    var id = e.target.id.toString();
-    this.element.value = date.toLocaleString() + " " + id + " " + e.type.toString();
+    this.element.value = date.toLocaleString() + " | " + eventinfo.target + " | " + eventinfo.action;
+    while(eventinfo.containers.length != 0) {
+      this.element.value = this.element.value + " | " + eventinfo.containers.shift();
+    }
   },
 };
 
 var OutputTable = {
+  
+  entryCount: 0,
+  
   get element() {
     return document.getElementById("outputTableEntries");
   },
+  
   clear: function() {
     while (this.element.firstChild) {
       this.element.removeChild(this.element.firstChild);
     }
+    this.entryCount = 0;
   },
+  
   log: function(e) {
-    this.insert(e);
+    if(this.entryCount < 100) {
+      this.insert(e);
+    }
   },
-  insert: function(evin) {
-    const xulns = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  
+  insert: function(eventinfo) {    
+    var elementcell = document.createElementNS(XULNS, "treecell");
+    elementcell.setAttribute("label", eventinfo.target);
     
-    var elementcell = document.createElementNS(xulns, "treecell");
-    elementcell.setAttribute("label", evin.target.id);
+    var eventcell = document.createElementNS(XULNS, "treecell");
+    eventcell.setAttribute("label", eventinfo.action);
     
-    var eventcell = document.createElementNS(xulns, "treecell");
-    eventcell.setAttribute("label", evin.type);
-    
-    var treerow = document.createElementNS(xulns, "treerow");
+    var treerow = document.createElementNS(XULNS, "treerow");
     treerow.appendChild(elementcell);
     treerow.appendChild(eventcell);
     
-    var treeitem = document.createElementNS(xulns, "treeitem");
+    var treeitem = document.createElementNS(XULNS, "treeitem");
     treeitem.setAttribute("container", "true");
-    treeitem.setAttribute("open", "true");
+    treeitem.setAttribute("open", "false");
     treeitem.appendChild(treerow);
     
-    return this.element.appendChild(treeitem);
+    // add ancestors
+    this.insertContainers(treeitem, eventinfo);
+    
+    this.element.appendChild(treeitem);
+    this.entryCount++;
+  },
+  
+  insertContainers: function(treeitemparam, eventinfo) {
+    var toptreeitem = treeitemparam;
+    while(eventinfo.containers.length != 0) {
+      var elementcell = document.createElementNS(XULNS, "treecell");
+      elementcell.setAttribute("label", eventinfo.containers.shift());
+      
+      var treerow = document.createElementNS(XULNS, "treerow");
+      treerow.appendChild(elementcell);
+      
+      var treeitem = document.createElementNS(XULNS, "treeitem");
+      treeitem.setAttribute("container", "true");
+      treeitem.setAttribute("open", "true");
+      treeitem.appendChild(treerow);
+      
+      var treechildren = document.createElementNS(XULNS, "treechildren");
+      treechildren.appendChild(treeitem);
+      
+      toptreeitem.appendChild(treechildren);
+      toptreeitem = treeitem
+    }
   },
 };
 
 var MainWindow = {
+  
   rootElementId: "main-window",
+  
   get window() {
     var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                        .getService(Components.interfaces.nsIWindowMediator);
@@ -99,45 +139,32 @@ var MainWindow = {
     }
     return win;
   },  
+  
   connect: function(logger) {
-    this.window.addEventListener("click", function(e) { logger.log(e); }, false);
+    this.window.addEventListener("click", function(e) { logger.log(new EventInfo(e, MainWindow.window)); }, false);
   },
 };
 
 function EventInfo(event, window){
-
-    // properties
-    this.target = event.target.id;
-    this.nodeName = event.target.nodeName;
-    this.action = event.type;
-    this.timestamp = time.now();
+  
+  // properties
+  this.target = event.target.id;
+  this.nodeName = event.target.nodeName;
+  this.action = event.type;
+  this.containers = new Array();
+  var target = window.document.getElementById(this.target);
+  while(target.parentNode.id != MainWindow.rootElementId) {
+    target = target.parentNode;
+    this.containers.push(target.id);
+  }
+  
+  // methods
+  if (typeof this.nodeName != "function"){
     
-    this.elements = new Array();
-    var target = window.document.getElementById(this.target);
-    while(target.parentNode.id != MainWindow.rootElementId) {
-      target = target.parentNode;
-      elements.push(target.id);
-    }
-    
-    // methods
-    if (typeof this.sayName != "function"){
-      
-      Person.prototype.sayName = function(){
-          alert(this.name);
-      };
-    }
-        /*
-    var elements = new Array();
-    target = mainWindow.document.getElementById(id); 
-    
-    while(target.parentNode.id != MainWindow.rootElementId) {
-      target = target.parentNode;
-      elements.push(target.id);
-    }
-    
-    while(elements.length != 0) {
-      outputBox.value = outputBox.value + " " + elements.shift();
-    }*/
+    EventInfo.prototype.nodeName = function(){
+        alert(this.target);
+    };
+  }
 }
 
 /*var ListenerButton = {
