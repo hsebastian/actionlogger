@@ -52,7 +52,7 @@ var OutputBox = {
   
   log: function(eventinfo) {
     var date = new Date();
-    this.element.value = date.toLocaleString() + " | " + eventinfo.target + " | " + eventinfo.action;
+    this.element.value = date.toLocaleString() + " | " + eventinfo.target + " | " + eventinfo.nodeName + " | " + eventinfo.action;
     while(eventinfo.containers.length != 0) {
       this.element.value = this.element.value + " | " + eventinfo.containers.shift();
     }
