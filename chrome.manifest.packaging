@@ -1,0 +1,6 @@
+
+content actionlogger jar:chrome/actionlogger.jar!/content/
+
+overlay chrome://browser/content/browser.xul chrome://actionlogger/content/overlay.xul
+
+locale	actionlogger	en-US	jar:chrome/actionlogger.jar!/locale/en-US/
