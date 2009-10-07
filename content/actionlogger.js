@@ -6,6 +6,7 @@ var ActionLogger = {
   outputBox : null,
   outputTable: null,
   mainWindow: null,
+  dumpButton: null,
   
   onLoad: function() {
     this.init();
@@ -13,32 +14,44 @@ var ActionLogger = {
   },
   
   init: function() {
-    outputBox = OutputBox;
-    clearButton = ClearButton;
     mainWindow = MainWindow;
+    outputBox = OutputBox;
     outputTable = OutputTable;
+    clearButton = document.getElementById("clearButton");
+    dumpButton = document.getElementById("dumpButton");
     
-    outputBox.element.value = "Opened1!";
-    clearButton.connect(outputBox);
-    clearButton.connect(outputTable);
     mainWindow.connect(outputBox);
     mainWindow.connect(outputTable);
+    outputBox.element.value = "Just Opened!";
+    outputTable.init();
+    clearButton.addEventListener("click", function(e) { outputBox.clear(); }, false);
+    clearButton.addEventListener("click", function(e) { outputTable.clear(); }, false);
+    dumpButton.addEventListener("click", function(e) { outputTable.dump(); }, false);
   },
 };
 
-var ClearButton = {
+function EventInfo(event, window){
   
-  target: null,
+  // properties
+  this.target = event.target.id;
+  this.nodeName = event.target.nodeName;
+  this.action = event.type;
+  this.containers = new Array();
   
-  get element() {
-    return document.getElementById("clearButton");
-  },
+  var target = window.document.getElementById(this.target);
+  while(target.parentNode.id != MainWindow.rootElementId) {
+    target = target.parentNode;
+    this.containers.push(target.id);
+  }
   
-  connect: function(target) {
-    this.target = target;
-    this.element.addEventListener("click", function(e) { target.clear(); }, false);
-  },
-};
+  // methods
+  /*if (typeof this.nodeName != "function"){
+    
+    EventInfo.prototype.nodeName = function(){
+        alert(this.target);
+    };
+  }*/
+}
 
 var OutputBox = {
   
@@ -61,26 +74,35 @@ var OutputBox = {
 
 var OutputTable = {
   
-  entryCount: 0,
+  entries: null,
+  element: null,
   
-  get element() {
-    return document.getElementById("outputTableEntries");
+  init: function() {
+    this.entries = new Array();
+    this.element = document.getElementById("outputTableEntries");
   },
   
   clear: function() {
+    
+    while (this.entries.length > 0) {
+      this.entries.shift();
+    }
+    
     while (this.element.firstChild) {
       this.element.removeChild(this.element.firstChild);
     }
-    this.entryCount = 0;
   },
   
   log: function(e) {
-    if(this.entryCount < 100) {
+    if(this.entries.length < 100) {
       this.insert(e);
     }
   },
   
-  insert: function(eventinfo) {    
+  insert: function(eventinfo) {
+    
+    this.entries.push(eventinfo);
+    
     var elementcell = document.createElementNS(XULNS, "treecell");
     elementcell.setAttribute("label", eventinfo.target);
     
@@ -97,17 +119,17 @@ var OutputTable = {
     treeitem.appendChild(treerow);
     
     // add ancestors
-    this.insertContainers(treeitem, eventinfo);
+    this._insertContainers(treeitem, eventinfo);
     
     this.element.appendChild(treeitem);
-    this.entryCount++;
   },
   
-  insertContainers: function(treeitemparam, eventinfo) {
+  _insertContainers: function(treeitemparam, eventinfo) {
     var toptreeitem = treeitemparam;
-    while(eventinfo.containers.length != 0) {
+    
+    for(var i = 0; i < eventinfo.containers.length; i++) {
       var elementcell = document.createElementNS(XULNS, "treecell");
-      elementcell.setAttribute("label", eventinfo.containers.shift());
+      elementcell.setAttribute("label", eventinfo.containers[i]);
       
       var treerow = document.createElementNS(XULNS, "treerow");
       treerow.appendChild(elementcell);
@@ -121,7 +143,37 @@ var OutputTable = {
       treechildren.appendChild(treeitem);
       
       toptreeitem.appendChild(treechildren);
-      toptreeitem = treeitem
+      toptreeitem = treeitem;
+    }
+  },
+  
+  dump: function() {
+    if(this.entries.length > 0) {
+      
+      var data = JSON.stringify(this.entries);
+      
+      const nsIFilePicker = Components.interfaces.nsIFilePicker;
+      
+      var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+      fp.init(window, "Save Output As", nsIFilePicker.modeSave);
+      fp.appendFilters(nsIFilePicker.filterAll | nsIFilePicker.filterText);
+      
+      var rv = fp.show();
+      if (rv == nsIFilePicker.returnOK || rv == nsIFilePicker.returnReplace) {
+        var file = fp.file;
+        var foStream = Components.classes["@mozilla.org/network/file-output-stream;1"].
+                                 createInstance(Components.interfaces.nsIFileOutputStream);
+        
+        // flag: PR_WRONLY | PR_CREATE_FILE | PR_TRUNCATE, mode: ?
+        foStream.init(file, 0x02 | 0x08 | 0x20, 0666, 0); 
+        var converter = Components.classes["@mozilla.org/intl/converter-output-stream;1"]
+                                  .createInstance(Components.interfaces.nsIConverterOutputStream);
+        
+        // buffer size: CONVERTER_BUFFER_SIZE 8192, replacement char: none 
+        converter.init(foStream, "UTF-8", 0, 0);
+        converter.writeString(data);
+        converter.close();
+      }
     }
   },
 };
@@ -145,28 +197,6 @@ var MainWindow = {
   },
 };
 
-function EventInfo(event, window){
-  
-  // properties
-  this.target = event.target.id;
-  this.nodeName = event.target.nodeName;
-  this.action = event.type;
-  this.containers = new Array();
-  var target = window.document.getElementById(this.target);
-  while(target.parentNode.id != MainWindow.rootElementId) {
-    target = target.parentNode;
-    this.containers.push(target.id);
-  }
-  
-  // methods
-  if (typeof this.nodeName != "function"){
-    
-    EventInfo.prototype.nodeName = function(){
-        alert(this.target);
-    };
-  }
-}
-
 /*var ListenerButton = {
   
   state: true,
@@ -182,8 +212,26 @@ function EventInfo(event, window){
       state = true;
     }
   },
+  
+  connect: function(target) {
+    this.element.addEventListener("click", function(e) { target.toggle(); }, false);
+  },
 };
 // alert("clicked");
 */
+/*
+var fp = Components.classes["@mozilla.org/filepicker;1"]
+	           .createInstance(Components.interfaces.nsIFilePicker);
+fp.init(window, "Dialog Title", nsIFilePicker.modeOpen);
+fp.appendFilters(nsIFilePicker.filterAll | nsIFilePicker.filterText);
 
+var rv = fp.show();
+if (rv == nsIFilePicker.returnOK || rv == nsIFilePicker.returnReplace) {
+  var file = fp.file;
+  // Get the path as string. Note that you usually won't 
+  // need to work with the string paths.
+  var path = fp.file.path;
+  // work with returned nsILocalFile...
+}
+*/
 window.addEventListener("load", function(e) { ActionLogger.onLoad(e); }, false); 

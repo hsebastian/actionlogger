@@ -1,2 +1,5 @@
-<!ENTITY title.label "Action Logger!">
+<!ENTITY title.label "Action Logger">
 <!ENTITY clearButton.label "Clear">
+<!ENTITY listenerStopButton.label "Stop">
+<!ENTITY listenerPlayButton.label "Log">
+<!ENTITY dumpButton.label "Dump to file">
