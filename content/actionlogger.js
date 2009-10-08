@@ -7,6 +7,7 @@ var ActionLogger = {
   outputTable: null,
   mainWindow: null,
   dumpButton: null,
+  listenerButton: null,
   
   onLoad: function() {
     this.init();
@@ -19,6 +20,7 @@ var ActionLogger = {
     outputTable = OutputTable;
     clearButton = document.getElementById("clearButton");
     dumpButton = document.getElementById("dumpButton");
+    listenerButton = document.getElementById("listenerButton");
     
     mainWindow.connect(outputBox);
     mainWindow.connect(outputTable);
@@ -27,6 +29,7 @@ var ActionLogger = {
     clearButton.addEventListener("click", function(e) { outputBox.clear(); }, false);
     clearButton.addEventListener("click", function(e) { outputTable.clear(); }, false);
     dumpButton.addEventListener("click", function(e) { outputTable.dump(); }, false);
+    listenerButton.addEventListener("click", function(e) { outputTable.togglelog(); }, false);
   },
 };
 
@@ -76,10 +79,12 @@ var OutputTable = {
   
   entries: null,
   element: null,
+  listening: true,
   
   init: function() {
     this.entries = new Array();
     this.element = document.getElementById("outputTableEntries");
+    this.listening = true;
   },
   
   clear: function() {
@@ -94,7 +99,7 @@ var OutputTable = {
   },
   
   log: function(e) {
-    if(this.entries.length < 100) {
+    if(this.entries.length < 100 && this.listening) {
       this.insert(e);
     }
   },
@@ -176,6 +181,13 @@ var OutputTable = {
       }
     }
   },
+  
+  togglelog: function() {
+    if(this.listening)
+      this.listening = false;
+    else
+      this.listening = true;
+  },
 };
 
 var MainWindow = {
@@ -219,19 +231,5 @@ var MainWindow = {
 };
 // alert("clicked");
 */
-/*
-var fp = Components.classes["@mozilla.org/filepicker;1"]
-	           .createInstance(Components.interfaces.nsIFilePicker);
-fp.init(window, "Dialog Title", nsIFilePicker.modeOpen);
-fp.appendFilters(nsIFilePicker.filterAll | nsIFilePicker.filterText);
 
-var rv = fp.show();
-if (rv == nsIFilePicker.returnOK || rv == nsIFilePicker.returnReplace) {
-  var file = fp.file;
-  // Get the path as string. Note that you usually won't 
-  // need to work with the string paths.
-  var path = fp.file.path;
-  // work with returned nsILocalFile...
-}
-*/
 window.addEventListener("load", function(e) { ActionLogger.onLoad(e); }, false); 

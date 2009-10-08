@@ -3,15 +3,27 @@
 <!DOCTYPE window SYSTEM "chrome://actionlogger/locale/actionlogger.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         title="&title.label;" width="500" height="500">
-
+  
   <!-- your code here -->
   
   <!-- imports JavaScript -->
   <script src="actionlogger.js"/>
-
+  <script type="text/javascript">
+    // No CDATA protection to get .dtd entities to be used in JavaScript
+    var stoplabel = "&listenerStopButton.label;"
+    var playlabel = "&listenerPlayButton.label;"
+    function togglelabel() {
+      var listenerbtn = document.getElementById("listenerButton");
+      if(listenerbtn.label == stoplabel)
+        listenerbtn.label = playlabel;
+      else
+        listenerbtn.label = stoplabel;
+    }
+  </script>
+  
   <button id="clearButton" label="&clearButton.label;"/>
   <textbox id="outputBox" multiline="true" value="Action information" height="100"/>
-  <!--button id="listenerButton" label="&listenerStopButton.label;"/-->
+  <button id="listenerButton" label="&listenerStopButton.label;" onclick="togglelabel()"/>
   <tree id="outputTable" flex="1">
     <treecols id="columnHeaders">
       <treecol id="elementsCol" label="Elements"
