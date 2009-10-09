@@ -26,11 +26,11 @@
   <button id="listenerButton" label="&listenerStopButton.label;" onclick="togglelabel()"/>
   <tree id="outputTable" flex="1">
     <treecols id="columnHeaders">
-      <treecol id="elementsCol" label="Elements"
+      <treecol id="elementsCol" label="&nodeNameColumnHeader.label;"
                persist="width,hidden,ordinal" primary="true"
                width="300" flex="1"/>
       <splitter class="tree-splitter"/>
-      <treecol id="eventCol" label="Event"
+      <treecol id="eventCol" label="&identifierColumnHeader.label;"
                persist="width,hidden,ordinal" flex="1"/>
     </treecols>
     <treechildren id="outputTableEntries" alternatingbackground="true" />

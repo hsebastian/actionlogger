@@ -35,18 +35,30 @@ var ActionLogger = {
 
 function EventInfo(event, window){
   
+  this.action = event.type;
+  this.targets = new Array();
+  
+  var target = event.originalTarget:
+  while(target.parentNode.id != MainWindow.rootElementId) {
+    this.containers.push(new Target(target);
+    target = target.parentNode;
+  }
+  
+  /*
+  // alert(event.originalTarget);
   // properties
   this.target = event.target.id;
   this.nodeName = event.target.nodeName;
   this.action = event.type;
   this.containers = new Array();
   
-  var target = window.document.getElementById(this.target);
+  //var target = window.document.getElementById(this.target);
+  var target = event.originalTarget;
   while(target.parentNode.id != MainWindow.rootElementId) {
     target = target.parentNode;
     this.containers.push(target.id);
   }
-  
+  */
   // methods
   /*if (typeof this.nodeName != "function"){
     
@@ -55,6 +67,42 @@ function EventInfo(event, window){
     };
   }*/
 }
+
+function Target(target){
+  this.nodeName = target.nodeName;
+  this.identifier = null;
+  
+  if(target.hasAttribute("id")) {
+    this.identifier = "id: " + target.getAttribute("id");
+  } else if (target.hasAttribute("anonid")) {
+    this.identifier = "anonid: " + target.getAttribute("anonid");
+  } else if (target.hasAttribute("itemid")) {
+    this.identifier = "itemid: " + target.getAttribute("itemid");
+  } else if (target.hasAttribute("class")) {
+    this.identifier = "class: " + target.getAttribute("class");
+  } else if (target.hasAttribute("uri")) {
+    this.identifier = "uri: " + target.getAttribute("uri");
+  } else if (target.hasAttribute("url")) {
+    this.identifier = "url: " + target.getAttribute("url");
+  } else if (target.hasAttribute("label")) {
+    this.identifier = "label: " + target.getAttribute("label");
+  } else {
+    this.identifier = "see container's identifier";
+  }
+};
+
+/*
+var Identifiers = {
+  this.byid = "id",
+  this.byanonid = "id",
+  this.byid = "id",
+  this.byid = "id",
+  this.byid = "id",
+  this.byid = "id",
+  this.byid = "id",
+  this.byid = "id",
+};
+*/
 
 var OutputBox = {
   
@@ -108,6 +156,32 @@ var OutputTable = {
     
     this.entries.push(eventinfo);
     
+    var toptreechildren = this.element;
+    
+    for(var i = 0; i < eventinfo.targets.length; i++) {
+      var elementcell = document.createElementNS(XULNS, "treecell");
+      elementcell.setAttribute("label", eventinfo.target[i].nodeName);
+      
+      var eventcell = document.createElementNS(XULNS, "treecell");
+      eventcell.setAttribute("label", eventinfo.target[i].identifier);
+      
+      var treerow = document.createElementNS(XULNS, "treerow");
+      treerow.appendChild(elementcell);
+      treerow.appendChild(eventcell);
+      
+      var treechildren = document.createElementNS(XULNS, "treechildren");
+      
+      var treeitem = document.createElementNS(XULNS, "treeitem");
+      treeitem.setAttribute("container", "true");
+      treeitem.setAttribute("open", "false");
+      treeitem.appendChild(treerow);
+      treeitem.appendChild(treechildren);
+      
+      toptreechildren.appendChild(treeitem);
+      toptreechildren = treechildren;
+    }
+    
+    /*
     var elementcell = document.createElementNS(XULNS, "treecell");
     elementcell.setAttribute("label", eventinfo.target);
     
@@ -126,7 +200,7 @@ var OutputTable = {
     // add ancestors
     this._insertContainers(treeitem, eventinfo);
     
-    this.element.appendChild(treeitem);
+    this.element.appendChild(treeitem);*/
   },
   
   _insertContainers: function(treeitemparam, eventinfo) {
@@ -208,28 +282,5 @@ var MainWindow = {
     this.window.addEventListener("click", function(e) { logger.log(new EventInfo(e, MainWindow.window)); }, false);
   },
 };
-
-/*var ListenerButton = {
-  
-  state: true,
-  
-  get element() {
-    return document.getElementById("listenerButton");
-  },
-  
-  toggle: function() {
-    if(this.state) { 
-      state = false;
-    } else {
-      state = true;
-    }
-  },
-  
-  connect: function(target) {
-    this.element.addEventListener("click", function(e) { target.toggle(); }, false);
-  },
-};
-// alert("clicked");
-*/
 
 window.addEventListener("load", function(e) { ActionLogger.onLoad(e); }, false); 

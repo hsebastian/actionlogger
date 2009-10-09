@@ -2,4 +2,6 @@
 <!ENTITY clearButton.label "Clear">
 <!ENTITY listenerStopButton.label "Stop">
 <!ENTITY listenerPlayButton.label "Log">
-<!ENTITY dumpButton.label "Dump to file">
+<!ENTITY dumpButton.label "Dump to file">&;
+<!ENTITY nodeNameColumnHeader.label "Elements by nodeName">
+<!ENTITY identifierColumnHeader.label "Possible identifier">
