@@ -38,34 +38,11 @@ function EventInfo(event, window){
   this.action = event.type;
   this.targets = new Array();
   
-  var target = event.originalTarget:
-  while(target.parentNode.id != MainWindow.rootElementId) {
-    this.containers.push(new Target(target);
-    target = target.parentNode;
+  var t = event.originalTarget;
+  while(t != null && t.id != MainWindow.rootElementId) {
+    this.targets.push(new Target(t));
+    t = t.parentNode;
   }
-  
-  /*
-  // alert(event.originalTarget);
-  // properties
-  this.target = event.target.id;
-  this.nodeName = event.target.nodeName;
-  this.action = event.type;
-  this.containers = new Array();
-  
-  //var target = window.document.getElementById(this.target);
-  var target = event.originalTarget;
-  while(target.parentNode.id != MainWindow.rootElementId) {
-    target = target.parentNode;
-    this.containers.push(target.id);
-  }
-  */
-  // methods
-  /*if (typeof this.nodeName != "function"){
-    
-    EventInfo.prototype.nodeName = function(){
-        alert(this.target);
-    };
-  }*/
 }
 
 function Target(target){
@@ -87,22 +64,9 @@ function Target(target){
   } else if (target.hasAttribute("label")) {
     this.identifier = "label: " + target.getAttribute("label");
   } else {
-    this.identifier = "see container's identifier";
+    this.identifier = "(see container's identifier)";
   }
 };
-
-/*
-var Identifiers = {
-  this.byid = "id",
-  this.byanonid = "id",
-  this.byid = "id",
-  this.byid = "id",
-  this.byid = "id",
-  this.byid = "id",
-  this.byid = "id",
-  this.byid = "id",
-};
-*/
 
 var OutputBox = {
   
@@ -116,9 +80,10 @@ var OutputBox = {
   
   log: function(eventinfo) {
     var date = new Date();
-    this.element.value = date.toLocaleString() + " | " + eventinfo.target + " | " + eventinfo.nodeName + " | " + eventinfo.action;
-    while(eventinfo.containers.length != 0) {
-      this.element.value = this.element.value + " | " + eventinfo.containers.shift();
+    this.element.value = date.toLocaleString() + " | " + eventinfo.action;
+    while(eventinfo.targets.length != 0) {
+      var t = eventinfo.targets.shift();
+      this.element.value = this.element.value + " | " + t.nodeName + " - " + t.identifier;
     }
   },
 };
@@ -160,10 +125,10 @@ var OutputTable = {
     
     for(var i = 0; i < eventinfo.targets.length; i++) {
       var elementcell = document.createElementNS(XULNS, "treecell");
-      elementcell.setAttribute("label", eventinfo.target[i].nodeName);
+      elementcell.setAttribute("label", eventinfo.targets[i].nodeName);
       
       var eventcell = document.createElementNS(XULNS, "treecell");
-      eventcell.setAttribute("label", eventinfo.target[i].identifier);
+      eventcell.setAttribute("label", eventinfo.targets[i].identifier);
       
       var treerow = document.createElementNS(XULNS, "treerow");
       treerow.appendChild(elementcell);
@@ -173,7 +138,10 @@ var OutputTable = {
       
       var treeitem = document.createElementNS(XULNS, "treeitem");
       treeitem.setAttribute("container", "true");
-      treeitem.setAttribute("open", "false");
+      if(i == 0)
+        treeitem.setAttribute("open", "false");
+      else
+        treeitem.setAttribute("open", "true");
       treeitem.appendChild(treerow);
       treeitem.appendChild(treechildren);
       
@@ -181,63 +149,18 @@ var OutputTable = {
       toptreechildren = treechildren;
     }
     
-    /*
-    var elementcell = document.createElementNS(XULNS, "treecell");
-    elementcell.setAttribute("label", eventinfo.target);
-    
-    var eventcell = document.createElementNS(XULNS, "treecell");
-    eventcell.setAttribute("label", eventinfo.action);
-    
-    var treerow = document.createElementNS(XULNS, "treerow");
-    treerow.appendChild(elementcell);
-    treerow.appendChild(eventcell);
-    
-    var treeitem = document.createElementNS(XULNS, "treeitem");
-    treeitem.setAttribute("container", "true");
-    treeitem.setAttribute("open", "false");
-    treeitem.appendChild(treerow);
-    
-    // add ancestors
-    this._insertContainers(treeitem, eventinfo);
-    
-    this.element.appendChild(treeitem);*/
-  },
-  
-  _insertContainers: function(treeitemparam, eventinfo) {
-    var toptreeitem = treeitemparam;
-    
-    for(var i = 0; i < eventinfo.containers.length; i++) {
-      var elementcell = document.createElementNS(XULNS, "treecell");
-      elementcell.setAttribute("label", eventinfo.containers[i]);
-      
-      var treerow = document.createElementNS(XULNS, "treerow");
-      treerow.appendChild(elementcell);
-      
-      var treeitem = document.createElementNS(XULNS, "treeitem");
-      treeitem.setAttribute("container", "true");
-      treeitem.setAttribute("open", "true");
-      treeitem.appendChild(treerow);
-      
-      var treechildren = document.createElementNS(XULNS, "treechildren");
-      treechildren.appendChild(treeitem);
-      
-      toptreeitem.appendChild(treechildren);
-      toptreeitem = treeitem;
-    }
   },
   
   dump: function() {
     if(this.entries.length > 0) {
       
-      var data = JSON.stringify(this.entries);
-      
       const nsIFilePicker = Components.interfaces.nsIFilePicker;
-      
       var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
       fp.init(window, "Save Output As", nsIFilePicker.modeSave);
       fp.appendFilters(nsIFilePicker.filterAll | nsIFilePicker.filterText);
       
       var rv = fp.show();
+      
       if (rv == nsIFilePicker.returnOK || rv == nsIFilePicker.returnReplace) {
         var file = fp.file;
         var foStream = Components.classes["@mozilla.org/network/file-output-stream;1"].
@@ -250,7 +173,7 @@ var OutputTable = {
         
         // buffer size: CONVERTER_BUFFER_SIZE 8192, replacement char: none 
         converter.init(foStream, "UTF-8", 0, 0);
-        converter.writeString(data);
+        converter.writeString(JSON.stringify(this.entries));
         converter.close();
       }
     }
