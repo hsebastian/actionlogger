@@ -173,7 +173,8 @@ var OutputTable = {
         
         // buffer size: CONVERTER_BUFFER_SIZE 8192, replacement char: none 
         converter.init(foStream, "UTF-8", 0, 0);
-        converter.writeString(JSON.stringify(this.entries));
+        for(var i = 0; i < this.entries.length; i++)
+          converter.writeString(JSON.stringify(this.entries[i]) + "," + "\n");
         converter.close();
       }
     }
