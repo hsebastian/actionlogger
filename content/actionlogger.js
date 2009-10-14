@@ -33,7 +33,7 @@ var ActionLogger = {
   },
 };
 
-function EventInfo(event, window){
+function EventInfo(event){
   
   this.action = event.type;
   this.targets = new Array();
@@ -203,7 +203,7 @@ var MainWindow = {
   },  
   
   connect: function(logger) {
-    this.window.addEventListener("click", function(e) { logger.log(new EventInfo(e, MainWindow.window)); }, false);
+    this.window.addEventListener("click", function(e) { logger.log(new EventInfo(e)); }, false);
   },
 };
 
