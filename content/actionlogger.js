@@ -8,6 +8,8 @@ var ActionLogger = {
   mainWindow: null,
   dumpButton: null,
   listenerButton: null,
+  outputTable1: null,
+  loadedUriTable: null,
   
   onLoad: function() {
     this.init();
@@ -30,6 +32,22 @@ var ActionLogger = {
     clearButton.addEventListener("click", function(e) { outputTable.clear(); }, false);
     dumpButton.addEventListener("click", function(e) { outputTable.dump(); }, false);
     listenerButton.addEventListener("click", function(e) { outputTable.togglelog(); }, false);
+    
+    outputTable1 = OutputTable1;
+    outputTable1.init();
+    clearButton.addEventListener("click", function(e) { outputTable1.clear(); }, false);
+    mainWindow.window.addEventListener("DOMSubtreeModified", function(e) { outputTable1.log(e); }, false);
+    
+    loadedUriTable = LoadedUriTable;
+    loadedUriTable.init();
+    clearButton.addEventListener("click", function(e) { loadedUriTable.clear(); }, false);
+    mainWindow.window.Browser.selectedTab.browser.addEventListener("load", this.alert, true);
+  },
+  
+  alert: function() {
+    //mainWindow.window.Browser.selectedTab.browser.removeEventListener("load", arguments.callee, true);
+    //alert("loaded burial1" + mainWindow.window.Browser.selectedTab.browser.currentURI.spec);
+    loadedUriTable.log(mainWindow.window.Browser.selectedTab.browser.currentURI.spec);
   },
 };
 
@@ -79,6 +97,10 @@ var OutputBox = {
   },
   
   log: function(eventinfo) {
+    /*MainWindow.window.Browser.selectedTab.browser.addEventListener("load", 
+      function(e) { 
+        MainWindow.window.Browser.selectedTab.browser.removeEventListener("load", arguments.callee, true);
+        alert("loaded"); }, true);*/
     var date = new Date();
     this.element.value = date.toLocaleString() + " | " + eventinfo.action;
     while(eventinfo.targets.length != 0) {
@@ -178,6 +200,116 @@ var OutputTable = {
         converter.close();
       }
     }
+  },
+  
+  togglelog: function() {
+    if(this.listening)
+      this.listening = false;
+    else
+      this.listening = true;
+  },
+};
+
+var OutputTable1 = {
+  
+  entries: null,
+  element: null,
+  listening: true,
+  
+  init: function() {
+    this.entries = new Array();
+    this.element = document.getElementById("outputTable1Entries");
+    this.listening = true;
+  },
+  
+  clear: function() {
+    
+    while (this.entries.length > 0) {
+      this.entries.shift();
+    }
+    
+    while (this.element.firstChild) {
+      this.element.removeChild(this.element.firstChild);
+    }
+  },
+  
+  log: function(e) {
+    if(this.entries.length < 100 && this.listening) {
+      this.insert(e);
+    }
+  },
+  
+  insert: function(event) {
+    this.entries.push(event);
+    
+    var toptreechildren = this.element;
+    
+    var elementcell = document.createElementNS(XULNS, "treecell");
+    elementcell.setAttribute("label", event.target.type);
+    
+    var treerow = document.createElementNS(XULNS, "treerow");
+    treerow.appendChild(elementcell);
+    
+    var treeitem = document.createElementNS(XULNS, "treeitem");
+    treeitem.setAttribute("container", "true");
+    treeitem.appendChild(treerow);
+    
+    toptreechildren.appendChild(treeitem);
+  },
+  
+  togglelog: function() {
+    if(this.listening)
+      this.listening = false;
+    else
+      this.listening = true;
+  },
+};
+
+var LoadedUriTable = {
+  
+  entries: null,
+  element: null,
+  listening: true,
+  
+  init: function() {
+    this.entries = new Array();
+    this.element = document.getElementById("loadedUriTableEntries");
+    this.listening = true;
+  },
+  
+  clear: function() {
+    
+    while (this.entries.length > 0) {
+      this.entries.shift();
+    }
+    
+    while (this.element.firstChild) {
+      this.element.removeChild(this.element.firstChild);
+    }
+  },
+  
+  log: function(uri) {
+    if(this.entries.length < 100 && this.listening) {
+      this.insert(uri);
+    }
+  },
+  
+  insert: function(uri) {
+    this.entries.push(uri);
+    
+    var toptreechildren = this.element;
+    
+    var elementcell = document.createElementNS(XULNS, "treecell");
+    elementcell.setAttribute("label", uri);
+    
+    var treerow = document.createElementNS(XULNS, "treerow");
+    treerow.appendChild(elementcell);
+    
+    var treeitem = document.createElementNS(XULNS, "treeitem");
+    treeitem.setAttribute("container", "true");
+    treeitem.appendChild(treerow);
+    
+    toptreechildren.appendChild(treeitem);
   },
   
   togglelog: function() {
