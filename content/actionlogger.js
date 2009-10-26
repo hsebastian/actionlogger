@@ -36,12 +36,18 @@ var ActionLogger = {
     outputTable1 = OutputTable1;
     outputTable1.init();
     clearButton.addEventListener("click", function(e) { outputTable1.clear(); }, false);
-    mainWindow.window.addEventListener("DOMSubtreeModified", function(e) { outputTable1.log(e); }, false);
+    //mainWindow.window.addEventListener("DOMSubtreeModified", function(e) { outputTable1.log(e); }, true);
+    mainWindow.window.addEventListener("DOMNodeInserted", function(e) { outputTable1.log(e); }, true);
+    mainWindow.window.addEventListener("DOMNodeRemoved", function(e) { outputTable1.log(e); }, true);
+    mainWindow.window.addEventListener("DOMAttrModified", function(e) { outputTable1.log(e); }, true);
+    mainWindow.window.addEventListener("DOMCharacterDataModified", function(e) { outputTable1.log(e); }, true);
+    listenerButton.addEventListener("click", function(e) { outputTable1.togglelog(); }, false);
     
     loadedUriTable = LoadedUriTable;
     loadedUriTable.init();
     clearButton.addEventListener("click", function(e) { loadedUriTable.clear(); }, false);
     mainWindow.window.Browser.selectedTab.browser.addEventListener("load", this.alert, true);
+    listenerButton.addEventListener("click", function(e) { loadedUriTable.togglelog(); }, false);
   },
   
   alert: function() {
@@ -245,7 +251,12 @@ var OutputTable1 = {
     var toptreechildren = this.element;
     
     var elementcell = document.createElementNS(XULNS, "treecell");
-    elementcell.setAttribute("label", event.target.type);
+    elementcell.setAttribute("label", 
+      "name: " + event.target.nodeName + 
+      ", id: " + event.target.id + 
+      ", cl: " + event.target.className + 
+      ", pr: " + event.target.parentNode.nodeName + 
+      ", tp: " + event.type);
     
     var treerow = document.createElementNS(XULNS, "treerow");
     treerow.appendChild(elementcell);

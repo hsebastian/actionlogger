@@ -39,12 +39,9 @@
       <button id="dumpButton" label="&dumpButton.label;"/>
       <tree id="outputTable1" flex="1">
         <treecols>
-          <treecol label="Column1"
+          <treecol label="Changes to DOM"
                    persist="width,hidden,ordinal" primary="true"
                    width="300" flex="1"/>
-          <splitter class="tree-splitter"/>
-          <treecol label="Column2"
-                   persist="width,hidden,ordinal" flex="1"/>
         </treecols>
         <treechildren id="outputTable1Entries" alternatingbackground="true" />
       </tree>
