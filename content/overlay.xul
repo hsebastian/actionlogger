@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!-- ?xml-stylesheet href="chrome://actionlogger/chrome/actionlogger/skin/overlay.css" type="text/css"? -->
 <!DOCTYPE overlay SYSTEM "chrome://actionlogger/locale/overlay.dtd">
 
 <overlay id="actionlogger-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
@@ -10,12 +9,7 @@
   <!-- This is for the keyboard shortcut -->
   <keyset id="mainKeyset">
     <key id="key_actionlogger" key="&actionloggerTaskCmd.commandkey;" 
-         modifiers="accel,shift" oncommand="ActionLoggerOverlay.onMenuItemCommand(event);"/>
+         modifiers="accel,shift" oncommand="ActionLoggerOverlay.onMenuItemCommand();"/>
   </keyset>
   
-  <!-- This is for the Tools menu -->  
-  <menupopup id="menu_ToolsPopup">
-    <menuitem id="menu_actionlogger" label="&actionloggerToolsMenu.label;" 
-              accesskey="&actionloggerToolsMenu.accesskey;" oncommand="ActionLoggerOverlay.onMenuItemCommand(event);"/>
-  </menupopup>
 </overlay> 
